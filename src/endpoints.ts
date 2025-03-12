@@ -36,7 +36,7 @@ function register(app: Express) {
                 return;
             }
             for (const user of users) {
-                if (user.token !== req.query.wallet) continue;
+                if (user.token !== req.query.token) continue;
                 res.json({ "wallet": user.wallet });
                 return;
             }

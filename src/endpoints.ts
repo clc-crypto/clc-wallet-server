@@ -46,23 +46,27 @@ function register(app: Express) {
         }
     });
 
-    app.get("/save-wallet", async (req, res) => {
+    app.post("/save-wallet", async (req, res) => {
         try {
-            if (!req.query.token) {
+            const { token, wallet } = req.body;
+
+            if (!token) {
                 res.status(400).json({ message: "Token parameter required!" });
                 return;
             }
-            if (!req.query.wallet) {
-                res.status(400).json({ message: "Wallet parameter required!" });
-                return;
+            if (!wallet) {
+                 res.status(400).json({ message: "Wallet parameter required!" });
+                 return;
             }
+
             for (const user of users) {
-                if (user.token !== req.query.wallet) continue;
-                user.wallet = req.query.wallet as string;
+                if (user.token !== token) continue;
+                user.wallet = wallet;
                 saveUsers();
-                res.status(200);
+                res.status(200).json({ message: "Wallet saved successfully!" });
                 return;
             }
+
             res.status(404).json({ message: "Token not found!" });
         } catch (e: any) {
             res.status(400).json({ message: e.message });

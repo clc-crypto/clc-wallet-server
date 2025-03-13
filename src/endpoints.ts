@@ -1,7 +1,14 @@
 import { Express } from "express";
 import {saveUsers, users} from "./db";
 
-function register(app: Express) {
+type Report = {
+    speed: number;
+    best: string;
+};
+
+const reports: Record<string, Report> = {};
+
+export default function register(app: Express) {
     app.get("/register", async (req, res) => {
         try {
             if (!req.query.wallet) {
@@ -72,6 +79,45 @@ function register(app: Express) {
             res.status(400).json({ message: e.message });
         }
     });
-}
 
-export default register;
+    app.get("/report", (req, res) => {
+        try {
+            if (!req.query.user) {
+                res.status(400).json({ message: "User parameter required!" });
+                return;
+            }
+
+            if (!req.query.speed) {
+                res.status(400).json({ message: "Speed parameter required!" });
+                return;
+            }
+
+            if (!req.query.best) {
+                res.status(400).json({ message: "Best parameter required!" });
+                return;
+            }
+
+            reports[req.query.user as string] = {
+                speed: parseInt(req.query.user as string),
+                best: req.query.best as string
+            };
+
+            res.status(404).json({ message: "Success!" });
+        } catch (e: any) {
+            res.status(400).json({ message: e.message });
+        }
+    });
+
+    app.get("/report-get", (req, res) => {
+        try {
+            if (!req.query.user) {
+                res.status(400).json({ message: "User parameter required!" });
+                return;
+            }
+
+            res.status(404).json(reports[req.query.user as string]);
+        } catch (e: any) {
+            res.status(400).json({ message: e.message });
+        }
+    });
+}

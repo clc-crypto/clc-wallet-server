@@ -4,6 +4,7 @@ import {saveUsers, users} from "./db";
 type Report = {
     speed: number;
     best: string;
+    timeStamp: number;
 };
 
 const reports: Record<string, Report> = {};
@@ -99,7 +100,8 @@ export default function register(app: Express) {
 
             reports[req.query.user as string] = {
                 speed: parseInt(req.query.speed as string),
-                best: req.query.best as string
+                best: req.query.best as string,
+                timeStamp: Date.now()
             };
 
             res.status(404).json({ message: "Success!" });

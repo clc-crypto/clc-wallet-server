@@ -9,7 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = register;
 const db_1 = require("./db");
+const reports = {};
 function register(app) {
     app.get("/register", (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
@@ -76,5 +78,41 @@ function register(app) {
             res.status(400).json({ message: e.message });
         }
     }));
+    app.get("/report", (req, res) => {
+        try {
+            if (!req.query.user) {
+                res.status(400).json({ message: "User parameter required!" });
+                return;
+            }
+            if (!req.query.speed) {
+                res.status(400).json({ message: "Speed parameter required!" });
+                return;
+            }
+            if (!req.query.best) {
+                res.status(400).json({ message: "Best parameter required!" });
+                return;
+            }
+            reports[req.query.user] = {
+                speed: parseInt(req.query.speed),
+                best: req.query.best,
+                timeStamp: Date.now()
+            };
+            res.status(404).json({ message: "Success!" });
+        }
+        catch (e) {
+            res.status(400).json({ message: e.message });
+        }
+    });
+    app.get("/report-get", (req, res) => {
+        try {
+            if (!req.query.user) {
+                res.status(400).json({ message: "User parameter required!" });
+                return;
+            }
+            res.status(404).json(reports[req.query.user]);
+        }
+        catch (e) {
+            res.status(400).json({ message: e.message });
+        }
+    });
 }
-exports.default = register;

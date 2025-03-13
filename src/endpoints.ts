@@ -3,6 +3,7 @@ import {saveUsers, users} from "./db";
 
 type Report = {
     speed: number;
+    mined: number;
     best: string;
     timeStamp: number;
 };
@@ -93,6 +94,11 @@ export default function register(app: Express) {
                 return;
             }
 
+            if (!req.query.mined) {
+                res.status(400).json({ mined: "Speed parameter required!" });
+                return;
+            }
+
             if (!req.query.best) {
                 res.status(400).json({ message: "Best parameter required!" });
                 return;
@@ -101,6 +107,7 @@ export default function register(app: Express) {
             reports[req.query.user as string] = {
                 speed: parseInt(req.query.speed as string),
                 best: req.query.best as string,
+                mined: parseInt(req.query.mined as string),
                 timeStamp: Date.now()
             };
 

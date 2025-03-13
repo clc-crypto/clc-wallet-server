@@ -98,7 +98,7 @@ export default function register(app: Express) {
             }
 
             reports[req.query.user as string] = {
-                speed: parseInt(req.query.user as string),
+                speed: parseInt(req.query.speed as string),
                 best: req.query.best as string
             };
 

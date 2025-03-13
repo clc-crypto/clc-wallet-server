@@ -111,7 +111,7 @@ export default function register(app: Express) {
                 timeStamp: Date.now()
             };
 
-            res.status(404).json({ message: "Success!" });
+            res.json({ message: "Success!" });
         } catch (e: any) {
             res.status(400).json({ message: e.message });
         }

@@ -11,22 +11,24 @@ type Report = {
 const reports: Record<string, Report> = {};
 
 export default function register(app: Express) {
-    app.get("/register", async (req, res) => {
+    app.post("/register", async (req, res) => {
         try {
-            if (!req.query.wallet) {
-                res.status(400).json({ message: "Wallet parameter required!" });
+            const { wallet } = req.body;
+
+            if (!wallet) {
+                res.status(400).json({ message: "Wallet body parameter required!" });
                 return;
             }
 
             let token = '';
             const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 15; i++) {
                 token += alphabet[Math.floor(Math.random() * alphabet.length)];
             }
 
             users.push({
-                wallet: req.query.wallet as string,
+                wallet: wallet as string,
                 token: token
             });
 
